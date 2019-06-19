@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Hex Generator</title>
+	<style type="text/css">
+	body,html{
+		height:100%;
+	}
+	</style>
+	<!-- <link rel="stylesheet" type="text/css" href="css/bootstrap.css"> -->
+</head>
+<body>
+	<canvas width="1320" height="300" style="border: 6px solid #000000;" id="myCanvas"></canvas>
+	
+<script >
+	function hexGen(){
+
+		var xhttp = new XMLHttpRequest();
+		xhttp.open('GET','http://api.noopschallenge.com/hexbot?count=500&width=1320&height=300&seed=FF7F50,FFD700,FF8C00',true);
+		xhttp.send();
+		xhttp.onreadystatechange = function(){
+			if(xhttp.readyState == 4 && xhttp.status == 200){
+				var user = JSON.parse(xhttp.responseText);
+				var array = user.colors;
+				var canvas = document.getElementById('myCanvas');
+				var ctx = canvas.getContext("2d");
+				
+				var j =0;
+				for(var i=0;i<500;i++){
+						j++;
+						ctx.fillStyle = array[i].value; 
+						ctx.beginPath(); 
+						ctx.arc(array[i].coordinates.x,array[i].coordinates.y,Math.random(),0,2*Math.PI);
+						ctx.stroke();
+						ctx.fill();
+						
+						if(j<50){
+							window.requestAnimationFrame(hexGen);
+						}
+					}
+			}
+		}
+
+
+	}
+	hexGen();
+
+
+
+</script>
+
+</body>
+</html>
